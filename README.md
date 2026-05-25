@@ -63,6 +63,7 @@ Transforms 2D CAD wireframe tile images into realistic 3D-looking rendered image
 **Requires:** GPU runtime (T4 or better). A runtime restart is needed after installing packages.
 
 <img width="640" height="512" alt="render_03" src="https://github.com/user-attachments/assets/ce06f448-c3fb-41cf-8ad4-46b74e110e3e" />
+
 ---
 
 ## Phase 3 — Hunyuan3D Mesh Generation
