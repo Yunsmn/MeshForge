@@ -42,6 +42,8 @@ Reads a DXF floor plan and segments it into meaningful regions using Meta's Segm
 
 **Main dependencies:** `ezdxf`, `cairosvg`, `segment-anything`, `torch`, `opencv-python`, `scipy`
 
+<img width="3162" height="1050" alt="segmentation_overlay" src="https://github.com/user-attachments/assets/97d96596-5566-440e-b56c-bc045d0647e7" />
+
 ---
 
 ## Phase 2 — ControlNet CAD-to-Render
@@ -60,6 +62,7 @@ Transforms 2D CAD wireframe tile images into realistic 3D-looking rendered image
 
 **Requires:** GPU runtime (T4 or better). A runtime restart is needed after installing packages.
 
+<img width="640" height="512" alt="render_03" src="https://github.com/user-attachments/assets/ce06f448-c3fb-41cf-8ad4-46b74e110e3e" />
 ---
 
 ## Phase 3 — Hunyuan3D Mesh Generation
@@ -78,6 +81,11 @@ Converts the rendered 2D images from Phase 2 into 3D mesh geometry using Tencent
 **Main dependencies:** `hunyuan3d (hy3dgen)`, `trimesh`, `rembg`, `torch`, `safetensors`, `pymeshlab`
 
 **Requires:** GPU runtime. Model weights are downloaded once and cached on Google Drive.
+
+<img width="328" height="237" alt="image2" src="https://github.com/user-attachments/assets/b7d4dd40-615e-4adf-835d-187fc70c2f53" />
+
+<img width="232" height="175" alt="Screenshot 2026-05-13 134652" src="https://github.com/user-attachments/assets/28be45b3-68ea-4388-a530-72bcbfd0aa41" />
+
 
 ---
 
@@ -98,30 +106,18 @@ Assembles all individual segment meshes from Phase 3 into a single unified 3D mo
 
 **Main dependencies:** `trimesh`, `scipy`, `numpy`, `networkx`
 
----
+<img width="748" height="425" alt="Screenshot 2026-05-18 120001" src="https://github.com/user-attachments/assets/1b94ff57-bd10-40c0-8427-e94850a6658c" />
 
-## Testing Sample
-
-The `testing sample/` folder contains a sample CAD file for testing the pipeline:
-
-| File | Description |
-|------|-------------|
-| `HY2M - Leap.dwg` | Original AutoCAD drawing file (native DWG format) |
-| `HY2M - Leap.dxf` | DXF version of the same file (used as input to Phase 1) |
-
-To test the pipeline, use `HY2M - Leap.dxf` as the input for Phase 1.
+<img width="348" height="296" alt="Screenshot 2026-05-19 122046" src="https://github.com/user-attachments/assets/11c249f0-513d-4681-99d0-e0e0804e3fe1" />
 
 ---
 
-## Step-by-Step Testing Guide (using `HY2M - Leap.dxf`)
-
-This walkthrough uses the sample file in `testing sample/` to run the full pipeline from DXF to unified 3D mesh.
+## Step-by-Step Testing Guide 
 
 ### Prerequisites
 
 - A Google account with ~30 GB of free Drive space (for model weight caching).
-- Upload all four notebooks (`phase 1.ipynb` through `phase 4.ipynb`) to Google Colab.
-- Upload `testing sample/HY2M - Leap.dxf` to Colab (you will be prompted, or can upload via the Files panel).
+- Upload all four notebooks (`phase 1.ipynb` through `phase 4.ipynb`) to Google Colab. 
 
 ---
 
@@ -133,17 +129,18 @@ This walkthrough uses the sample file in `testing sample/` to run the full pipel
 2. Run **Cell 1** — installs `ezdxf`, `cairosvg`, `segment-anything`, etc.
 3. Run **Cell 2** — downloads the SAM `vit_h` checkpoint (~2.5 GB). Skips if already present.
 4. Run **Cell 3** — imports libraries.
-5. Run **Cell 4** — you will be prompted to **upload your `.dxf` file**. Upload `HY2M - Leap.dxf` from `testing sample/`. The cell also sets all pipeline parameters:
+5. Run **Cell 4** — you will be prompted to **upload your `.dxf` file**.
+6.  The cell also sets all pipeline parameters:
    - `OVERVIEW_PX = 2048` — resolution of the overview render.
    - `TILE_LONG_EDGE_PX = 8192` — resolution of each segment tile.
    - `DENSITY_THRESHOLD = 0.06` — sensitivity for region detection.
    - No changes needed for the test file; defaults work out of the box.
-6. Run **Cells 5–12** sequentially (Run All is fine). The pipeline will:
+7. Run **Cells 5–12** sequentially (Run All is fine). The pipeline will:
    - Render the full DXF as a 2048 px overview image.
    - Build a density map and detect region candidates.
    - Run SAM on each normal-sized region to refine masks.
    - Save high-res tiles and compute segment adjacency.
-7. Run **Cell 13** — downloads `density_sam_results.zip` containing:
+8. Run **Cell 13** — downloads `density_sam_results.zip` containing:
 
 | Output file | What it is |
 |---|---|
@@ -238,18 +235,6 @@ Repeat for each rendered tile.
 | `unified_mesh_preview.png` | Multi-angle matplotlib preview |
 
 ---
-
-### Quick Reference: What to Feed Each Notebook
-
-| Phase | Input file(s) | Where to set / upload | Output file(s) |
-|-------|---------------|----------------------|-----------------|
-| 1 | `HY2M - Leap.dxf` | Upload when prompted (Cell 4) | `segments_meta.json` + `density_tiles/*.png` |
-| 2 | One tile PNG (e.g., `tile_0000.png`) | Set `INPUT_IMAGE_PATH` in Cell 3 | `render_01.png` ... `render_04.png` |
-| 3 | One render PNG (best from Phase 2) | Upload to `/content/input/` or when prompted (Cell 3) | `hunyuan3d_output.glb` |
-| 4 | All `.glb` meshes + `segments_meta.json` | Upload when prompted (Cell 3) | `unified_mesh.glb` |
-
----
-
 ## Requirements
 
 - Python 3.8+
