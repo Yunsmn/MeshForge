@@ -1,5 +1,7 @@
 # MeshForge — Automated 2D-to-3D Floor Plan Reconstruction
 
+<img width="1600" height="539" alt="WhatsApp Image 2026-05-21 at 5 53 37 PM" src="https://github.com/user-attachments/assets/b2bae4c9-ca37-43c0-b716-811e7fc02816" />
+
 MeshForge is an end-to-end pipeline that converts 2D CAD floor plans (DWG/DXF) into unified 3D mesh models. The pipeline is split into four sequential phases, each implemented as a standalone Jupyter notebook designed to run on Google Colab with GPU support.
 
 ## Pipeline Overview
